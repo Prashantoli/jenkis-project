@@ -20,6 +20,14 @@ pipeline {
             }
         }
 
+        stage('Build Docker Image') {
+            steps {
+                // Builds the image from the Dockerfile, tagged with the Jenkins build number.
+                // Image stays on the Jenkins machine - nothing is pushed anywhere.
+                sh "docker build -t hello-world-java:${env.BUILD_NUMBER} ."
+            }
+        }
+
         stage('Archive Jar') {
             steps {
                 // The built jar is saved with the build, downloadable from the Jenkins UI
