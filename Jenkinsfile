@@ -28,6 +28,16 @@ pipeline {
             }
         }
 
+        stage('Deploy to VM') {
+            steps {
+                // Stop and remove the old container (if any), then run the new one on port 8081.
+                sh '''
+                    docker rm -f hello-world-java 2>/dev/null || true
+                    docker run -d --name hello-world-java --restart unless-stopped -p 8081:8080 hello-world-java:${BUILD_NUMBER}
+                '''
+            }
+        }
+
         stage('Archive Jar') {
             steps {
                 // The built jar is saved with the build, downloadable from the Jenkins UI
